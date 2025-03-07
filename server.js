@@ -21,10 +21,10 @@ async function getHoroscope(sign) {
 app.get("/horoscope/:sign", async (req, res) => {
   const sign = parseInt(req.params.sign, 10);
   if (sign < 1 || sign > 12) {
-    return res.status(400).json({ error: "Invalid sign. Please use a number between 1 and 12." });
+    return res.status(400).send("Invalid sign. Please use a number between 1 and 12.");
   }
   const horoscope = await getHoroscope(sign);
-  res.json({ sign, horoscope });
+  res.send(horoscope); // Send only the horoscope text
 });
 
 app.listen(PORT, () => {
