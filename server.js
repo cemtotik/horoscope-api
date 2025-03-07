@@ -26,7 +26,11 @@ async function getHoroscope(sign) {
     const url = `https://www.horoscope.com/us/horoscopes/general/horoscope-general-daily-today.aspx?sign=${sign}`;
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
-    const horoscope = $("div.main-horoscope p").first().text().trim();
+    let horoscope = $("div.main-horoscope p").first().text().trim();
+
+    // Remove the year (e.g., "2025") from the horoscope text
+    horoscope = horoscope.replace(/, \d{4} - /, " - ");
+
     return horoscope || "Horoscope not found.";
   } catch (error) {
     console.error("Error fetching horoscope:", error);
