@@ -1,0 +1,17 @@
+{
+  "name": "horoscope-api",
+  "version": "1.0.0",
+  "description": "API to fetch daily horoscopes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12"
+  }
+}
