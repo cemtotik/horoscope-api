@@ -21,6 +21,28 @@ const zodiacSigns = {
   pisces: 12,
 };
 
+// Function to truncate text at the last sentence within the character limit
+function truncateText(text, maxLength) {
+  if (text.length <= maxLength) return text; // If the text is already within the limit, return it
+
+  // Truncate the text to the max length
+  let truncatedText = text.slice(0, maxLength);
+
+  // Find the last sentence-ending punctuation (., !, ?) within the truncated text
+  const lastPunctuationIndex = Math.max(
+    truncatedText.lastIndexOf("."),
+    truncatedText.lastIndexOf("!"),
+    truncatedText.lastIndexOf("?")
+  );
+
+  // If a sentence-ending punctuation is found, truncate at that point
+  if (lastPunctuationIndex >= 0) {
+    truncatedText = truncatedText.slice(0, lastPunctuationIndex + 1);
+  }
+
+  return truncatedText;
+}
+
 async function getHoroscope(sign) {
   try {
     const url = `https://www.horoscope.com/us/horoscopes/general/horoscope-general-daily-today.aspx?sign=${sign}`;
@@ -47,7 +69,13 @@ app.get("/horoscope/:sign", async (req, res) => {
   }
 
   const horoscope = await getHoroscope(signNumber);
-  res.send(horoscope); // Send only the horoscope text
+
+  // Truncate the horoscope text to fit within Twitch's 500-character limit
+  const maxLength = 500;
+  const truncatedHoroscope = truncateText(horoscope, maxLength);
+
+  // Send the truncated horoscope text
+  res.send(truncatedHoroscope);
 });
 
 app.listen(PORT, () => {
