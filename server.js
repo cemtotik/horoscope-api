@@ -5,6 +5,22 @@ const cheerio = require("cheerio");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Map zodiac sign names to their corresponding numbers
+const zodiacSigns = {
+  aries: 1,
+  taurus: 2,
+  gemini: 3,
+  cancer: 4,
+  leo: 5,
+  virgo: 6,
+  libra: 7,
+  scorpio: 8,
+  sagittarius: 9,
+  capricorn: 10,
+  aquarius: 11,
+  pisces: 12,
+};
+
 async function getHoroscope(sign) {
   try {
     const url = `https://www.horoscope.com/us/horoscopes/general/horoscope-general-daily-today.aspx?sign=${sign}`;
@@ -19,11 +35,14 @@ async function getHoroscope(sign) {
 }
 
 app.get("/horoscope/:sign", async (req, res) => {
-  const sign = parseInt(req.params.sign, 10);
-  if (sign < 1 || sign > 12) {
-    return res.status(400).send("Invalid sign. Please use a number between 1 and 12.");
+  const signName = req.params.sign.toLowerCase(); // Convert input to lowercase
+  const signNumber = zodiacSigns[signName]; // Get the corresponding number
+
+  if (!signNumber) {
+    return res.status(400).send("Invalid sign. Please enter a valid zodiac sign (e.g., Aries, Taurus).");
   }
-  const horoscope = await getHoroscope(sign);
+
+  const horoscope = await getHoroscope(signNumber);
   res.send(horoscope); // Send only the horoscope text
 });
 
